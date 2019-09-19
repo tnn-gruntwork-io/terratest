@@ -17,7 +17,7 @@ func (err TgInvalidBinary) Error() string {
 type OutputKeyNotFound string
 
 func (err OutputKeyNotFound) Error() string {
-	return fmt.Sprintf("output doesn't contain a value for the key %q", err)
+	return fmt.Sprintf("output doesn't contain a value for the key %q", string(err))
 }
 
 // OutputValueNotMap occures when casting a found output value to a map fails
