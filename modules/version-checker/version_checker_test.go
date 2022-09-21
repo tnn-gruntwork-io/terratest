@@ -72,6 +72,7 @@ func TestExtractVersionFromShellCommandOutput(t *testing.T) {
 		expectedVersionStr   string
 		containError         bool
 		expectedErrorMessage string
+		param                CheckVersionParams
 	}{
 		{
 			name:                 "Stand-alone version string",
@@ -79,6 +80,8 @@ func TestExtractVersionFromShellCommandOutput(t *testing.T) {
 			expectedVersionStr:   "1.2.3",
 			containError:         false,
 			expectedErrorMessage: "",
+			param: CheckVersionParams{
+			},
 		},
 		{
 			name:                 "version string with v prefix",
@@ -86,6 +89,8 @@ func TestExtractVersionFromShellCommandOutput(t *testing.T) {
 			expectedVersionStr:   "1.0.0",
 			containError:         false,
 			expectedErrorMessage: "",
+			param: CheckVersionParams{
+			},
 		},
 		{
 			name:                 "2 digit version string",
@@ -93,6 +98,8 @@ func TestExtractVersionFromShellCommandOutput(t *testing.T) {
 			expectedVersionStr:   "1.0",
 			containError:         false,
 			expectedErrorMessage: "",
+			param: CheckVersionParams{
+			},
 		},
 		{
 			name:                 "invalid output string",
@@ -100,6 +107,8 @@ func TestExtractVersionFromShellCommandOutput(t *testing.T) {
 			expectedVersionStr:   "",
 			containError:         true,
 			expectedErrorMessage: "failed to find version using regex matcher",
+			param: CheckVersionParams{
+			},
 		},
 		{
 			name:                 "empty output string",
@@ -107,11 +116,13 @@ func TestExtractVersionFromShellCommandOutput(t *testing.T) {
 			expectedVersionStr:   "",
 			containError:         true,
 			expectedErrorMessage: "failed to find version using regex matcher",
+			param: CheckVersionParams{
+			},
 		},
 	}
 
 	for _, tc := range tests {
-		versionStr, err := extractVersionFromShellCommandOutput(tc.outputStr)
+		versionStr, err := extractVersionFromShellCommandOutput(tc.param, tc.outputStr)
 		if tc.containError {
 			require.EqualError(t, err, tc.expectedErrorMessage, tc.name)
 		} else {
