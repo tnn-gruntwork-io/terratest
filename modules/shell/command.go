@@ -36,11 +36,22 @@ func RunCommand(t testing.TestingT, command Command) {
 // RunCommandE runs a shell command and redirects its stdout and stderr to the stdout of the atomic script itself. Any
 // returned error will be of type ErrWithCmdOutput, containing the output streams and the underlying error.
 func RunCommandE(t testing.TestingT, command Command) error {
-	output, err := runCommand(t, command)
+	_, output, err := runCommand(t, command)
 	if err != nil {
 		return &ErrWithCmdOutput{err, output}
 	}
 	return nil
+}
+
+// RunCommandPE runs a shell command and redirects its stdout and stderr to the stdout of the atomic script itself. Any
+// returned error will be of type ErrWithCmdOutput, containing the output streams and the underlying error. And return
+// process info.
+func RunCommandPE(t testing.TestingT, command Command) (*os.Process, error) {
+	process, output, err := runCommand(t, command)
+	if err != nil {
+		return nil, &ErrWithCmdOutput{err, output}
+	}
+	return process, nil
 }
 
 // RunCommandAndGetOutput runs a shell command and returns its stdout and stderr as a string. The stdout and stderr of
@@ -55,12 +66,24 @@ func RunCommandAndGetOutput(t testing.TestingT, command Command) string {
 // that command will also be logged with Command.Log to make debugging easier. Any returned error will be of type
 // ErrWithCmdOutput, containing the output streams and the underlying error.
 func RunCommandAndGetOutputE(t testing.TestingT, command Command) (string, error) {
-	output, err := runCommand(t, command)
+	_, output, err := runCommand(t, command)
 	if err != nil {
 		return output.Combined(), &ErrWithCmdOutput{err, output}
 	}
 
 	return output.Combined(), nil
+}
+
+// RunCommandAndGetOutputPE runs a shell command and returns its stdout and stderr as a string. The stdout and stderr of
+// that command will also be logged with Command.Log to make debugging easier. Any returned error will be of type
+// ErrWithCmdOutput, containing the output streams and the underlying error. And return process info.
+func RunCommandAndGetOutputPE(t testing.TestingT, command Command) (string, *os.Process, error) {
+	process, output, err := runCommand(t, command)
+	if err != nil {
+		return output.Combined(), nil, &ErrWithCmdOutput{err, output}
+	}
+
+	return output.Combined(), process, nil
 }
 
 // RunCommandAndGetStdOut runs a shell command and returns solely its stdout (but not stderr) as a string. The stdout and
@@ -76,12 +99,25 @@ func RunCommandAndGetStdOut(t testing.TestingT, command Command) string {
 // and stderr of that command will also be printed to the stdout and stderr of this Go program to make debugging easier.
 // Any returned error will be of type ErrWithCmdOutput, containing the output streams and the underlying error.
 func RunCommandAndGetStdOutE(t testing.TestingT, command Command) (string, error) {
-	output, err := runCommand(t, command)
+	_, output, err := runCommand(t, command)
 	if err != nil {
 		return output.Stdout(), &ErrWithCmdOutput{err, output}
 	}
 
 	return output.Stdout(), nil
+}
+
+// RunCommandAndGetStdOutPE runs a shell command and returns solely its stdout (but not stderr) as a string. The stdout
+// and stderr of that command will also be printed to the stdout and stderr of this Go program to make debugging easier.
+// Any returned error will be of type ErrWithCmdOutput, containing the output streams and the underlying error. And
+// return process info.
+func RunCommandAndGetStdOutPE(t testing.TestingT, command Command) (string, *os.Process, error) {
+	process, output, err := runCommand(t, command)
+	if err != nil {
+		return output.Stdout(), nil, &ErrWithCmdOutput{err, output}
+	}
+
+	return output.Stdout(), process, nil
 }
 
 type ErrWithCmdOutput struct {
@@ -96,7 +132,7 @@ func (e *ErrWithCmdOutput) Error() string {
 // runCommand runs a shell command and stores each line from stdout and stderr in Output. Depending on the logger, the
 // stdout and stderr of that command will also be printed to the stdout and stderr of this Go program to make debugging
 // easier.
-func runCommand(t testing.TestingT, command Command) (*output, error) {
+func runCommand(t testing.TestingT, command Command) (*os.Process, *output, error) {
 	command.Logger.Logf(t, "Running command %s with args %s", command.Command, command.Args)
 
 	cmd := exec.Command(command.Command, command.Args...)
@@ -106,25 +142,25 @@ func runCommand(t testing.TestingT, command Command) (*output, error) {
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	err = cmd.Start()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	output, err := readStdoutAndStderr(t, command.Logger, stdout, stderr)
 	if err != nil {
-		return output, err
+		return nil, output, err
 	}
 
-	return output, cmd.Wait()
+	return cmd.Process, output, cmd.Wait()
 }
 
 // This function captures stdout and stderr into the given variables while still printing it to the stdout and stderr
