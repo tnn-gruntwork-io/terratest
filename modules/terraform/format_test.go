@@ -278,3 +278,24 @@ func TestFormatArgsAppliesLockCorrectly(t *testing.T) {
 		assert.Equal(t, testCase.expected, FormatArgs(&Options{}, testCase.command...))
 	}
 }
+
+func TestFormatArgsAppliesVarsFilesAndVarsCorrectly(t *testing.T) {
+	t.Parallel()
+
+	testCases := []struct {
+		varFile  []string
+		vars     map[string]interface{}
+		expected []string
+	}{
+		{[]string{}, map[string]interface{}{"foo": "bar"}, []string{"apply", "-var", "foo=bar", "-lock=false"}},
+		{[]string{"var_file.tfvars"}, map[string]interface{}{}, []string{"apply", "-var-file", "var_file.tfvars", "-lock=false"}},
+		{[]string{"var_file.tfvars"}, map[string]interface{}{"foo": "bar"}, []string{"apply", "-var-file", "var_file.tfvars", "-var", "foo=bar", "-lock=false"}},
+	}
+
+	for _, testCase := range testCases {
+		assert.Equal(t, testCase.expected, FormatArgs(&Options{
+			VarFiles: testCase.varFile,
+			Vars:     testCase.vars,
+		}, "apply"))
+	}
+}
