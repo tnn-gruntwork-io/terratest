@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	AuthAssumeRoleEnvVar = "TERRATEST_IAM_ROLE" // OS environment variable name through which Assume Role ARN may be passed for authentication
+	AuthAssumeRoleEnvVar = "TERRATEST_IAM_ROLE"   // OS environment variable name through which Assume Role ARN may be passed for authentication
+	UseLocalStackEnvVar  = "TERRATEST_LOCALSTACK" // OS environment variable name through which LocalStack may be enabled
 )
 
 // NewAuthenticatedSession creates an AWS session following to standard AWS authentication workflow.
@@ -23,9 +24,13 @@ const (
 func NewAuthenticatedSession(region string) (*session.Session, error) {
 	if assumeRoleArn, ok := os.LookupEnv(AuthAssumeRoleEnvVar); ok {
 		return NewAuthenticatedSessionFromRole(region, assumeRoleArn)
-	} else {
-		return NewAuthenticatedSessionFromDefaultCredentials(region)
 	}
+
+	if localStackUrl, ok := os.LookupEnv(UseLocalStackEnvVar); ok {
+		return NewAuthenticatedLocalStackSession(region, localStackUrl)
+	}
+
+	return NewAuthenticatedSessionFromDefaultCredentials(region)
 }
 
 // NewAuthenticatedSessionFromDefaultCredentials gets an AWS Session, checking that the user has credentials properly configured in their environment.
@@ -54,6 +59,27 @@ func NewAuthenticatedSessionFromDefaultCredentials(region string) (*session.Sess
 // configured in the underlying environment, an error is returned.
 func NewAuthenticatedSessionFromRole(region string, roleARN string) (*session.Session, error) {
 	sess, err := CreateAwsSessionFromRole(region, roleARN)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err = sess.Config.Credentials.Get(); err != nil {
+		return nil, CredentialsError{UnderlyingErr: err}
+	}
+
+	return sess, nil
+}
+
+// NewAuthenticatedLocalStackSession returns a new LocalStack AWS Session.
+func NewAuthenticatedLocalStackSession(region string, url string) (*session.Session, error) {
+	awsConfig := aws.NewConfig().WithRegion(region).WithEndpoint(url).WithDisableSSL(true).WithCredentials(credentials.NewStaticCredentials("test", "test", ""))
+
+	sessionOptions := session.Options{
+		Config:            *awsConfig,
+		SharedConfigState: session.SharedConfigEnable,
+	}
+
+	sess, err := session.NewSessionWithOptions(sessionOptions)
 	if err != nil {
 		return nil, err
 	}
