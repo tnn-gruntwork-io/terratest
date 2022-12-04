@@ -81,27 +81,6 @@ func NewAuthenticatedSessionFromRole(region string, roleARN string) (*session.Se
 	return sess, nil
 }
 
-// NewAuthenticatedLocalStackSession returns a new LocalStack AWS Session.
-func NewAuthenticatedLocalStackSession(region string, url string) (*session.Session, error) {
-	awsConfig := aws.NewConfig().WithRegion(region).WithEndpoint(url).WithDisableSSL(true).WithCredentials(credentials.NewStaticCredentials("test", "test", ""))
-
-	sessionOptions := session.Options{
-		Config:            *awsConfig,
-		SharedConfigState: session.SharedConfigEnable,
-	}
-
-	sess, err := session.NewSessionWithOptions(sessionOptions)
-	if err != nil {
-		return nil, err
-	}
-
-	if _, err = sess.Config.Credentials.Get(); err != nil {
-		return nil, CredentialsError{UnderlyingErr: err}
-	}
-
-	return sess, nil
-}
-
 // CreateAwsSessionFromRole returns a new AWS session after assuming the role
 // whose ARN is provided in roleARN.
 func CreateAwsSessionFromRole(region string, roleARN string) (*session.Session, error) {
