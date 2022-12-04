@@ -33,7 +33,7 @@ func NewAuthenticatedSession(region string) (*session.Session, error) {
 func NewAuthenticatedSessionFromDefaultCredentials(region string) (*session.Session, error) {
 	awsConfig := aws.NewConfig().WithRegion(region)
 
-	if loaclStackUrl, ok := os.LookupEnv(LocalStackEnvVar); ok {
+	if localStackUrl, ok := os.LookupEnv(LocalStackEnvVar); ok {
 		awsAccessKeyId := "test"
 		awsSecretAccessKey := "test"
 
@@ -45,7 +45,7 @@ func NewAuthenticatedSessionFromDefaultCredentials(region string) (*session.Sess
 			awsSecretAccessKey = AWS_SECRET_ACCESS_KEY
 		}
 
-		awsConfig = awsConfig.WithEndpoint(loaclStackUrl).WithDisableSSL(true).WithCredentials(credentials.NewStaticCredentials(awsAccessKeyId, awsSecretAccessKey, ""))
+		awsConfig = awsConfig.WithEndpoint(localStackUrl).WithDisableSSL(true).WithCredentials(credentials.NewStaticCredentials(awsAccessKeyId, awsSecretAccessKey, ""))
 	}
 
 	sessionOptions := session.Options{
