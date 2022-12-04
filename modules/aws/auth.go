@@ -16,7 +16,7 @@ import (
 
 const (
 	AuthAssumeRoleEnvVar = "TERRATEST_IAM_ROLE"   // OS environment variable name through which Assume Role ARN may be passed for authentication
-	UseLocalStackEnvVar  = "TERRATEST_LOCALSTACK" // OS environment variable name through which LocalStack may be enabled
+	LocalStackEnvVar     = "TERRATEST_LOCALSTACK" // OS environment variable name through which LocalStack may be enabled
 )
 
 // NewAuthenticatedSession creates an AWS session following to standard AWS authentication workflow.
@@ -24,18 +24,29 @@ const (
 func NewAuthenticatedSession(region string) (*session.Session, error) {
 	if assumeRoleArn, ok := os.LookupEnv(AuthAssumeRoleEnvVar); ok {
 		return NewAuthenticatedSessionFromRole(region, assumeRoleArn)
+	} else {
+		return NewAuthenticatedSessionFromDefaultCredentials(region)
 	}
-
-	if localStackUrl, ok := os.LookupEnv(UseLocalStackEnvVar); ok {
-		return NewAuthenticatedLocalStackSession(region, localStackUrl)
-	}
-
-	return NewAuthenticatedSessionFromDefaultCredentials(region)
 }
 
 // NewAuthenticatedSessionFromDefaultCredentials gets an AWS Session, checking that the user has credentials properly configured in their environment.
 func NewAuthenticatedSessionFromDefaultCredentials(region string) (*session.Session, error) {
 	awsConfig := aws.NewConfig().WithRegion(region)
+
+	if loaclStackUrl, ok := os.LookupEnv(LocalStackEnvVar); ok {
+		awsAccessKeyId := "test"
+		awsSecretAccessKey := "test"
+
+		if AWS_ACCESS_KEY_ID, ok := os.LookupEnv("AWS_ACCESS_KEY_ID"); ok {
+			awsAccessKeyId = AWS_ACCESS_KEY_ID
+		}
+
+		if AWS_SECRET_ACCESS_KEY, ok := os.LookupEnv("AWS_SECRET_ACCESS_KEY"); ok {
+			awsSecretAccessKey = AWS_SECRET_ACCESS_KEY
+		}
+
+		awsConfig = awsConfig.WithEndpoint(loaclStackUrl).WithDisableSSL(true).WithCredentials(credentials.NewStaticCredentials(awsAccessKeyId, awsSecretAccessKey, ""))
+	}
 
 	sessionOptions := session.Options{
 		Config:            *awsConfig,
