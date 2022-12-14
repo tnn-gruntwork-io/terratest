@@ -30,6 +30,7 @@ func NewAuthenticatedSession(region string) (*session.Session, error) {
 }
 
 // NewAuthenticatedSessionFromDefaultCredentials gets an AWS Session, checking that the user has credentials properly configured in their environment.
+// if TERRATEST_LOCALSTACK environment variable is set, uses LocalStack Endpoint and Credentials.
 func NewAuthenticatedSessionFromDefaultCredentials(region string) (*session.Session, error) {
 	awsConfig := aws.NewConfig().WithRegion(region)
 
