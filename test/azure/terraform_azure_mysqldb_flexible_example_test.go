@@ -23,22 +23,22 @@ func TestTerraformAzureMySqlFlexibleServerDBExample(t *testing.T) {
 
 	uniquePostfix := strings.ToLower(random.UniqueId())
 	expectedFlexibleServerSkuName := "Standard_B1ms"
-	expectedFlexibleServerStorageGb := "20"
+	expectedFlexibleServerStorageGb := "32"
 	expectedFlexibleServerDatabaseCharSet := "utf8"
 	expectedFlexibleServerDatabaseCollation := "utf8_unicode_ci"
 
 	// website::tag::1:: Configure Terraform setting up a path to Terraform code.
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../../examples/azure/terraform-azure-mysql-flexible-example",
+		TerraformDir: "../../examples/azure/terraform-azure-mysqldb-flexible-example",
 		Vars: map[string]interface{}{
 			"postfix": uniquePostfix,
 			// SKU name returned by Azure is different from
 			// the SKU name that terraform use to create the resource.
 			// Appending the SKU Family as workaround.
-			"mysql_flexible_server_sku_name":   "B_" + expectedFlexibleServerSkuName,
-			"mysql_flexible_server_storage_mb": expectedFlexibleServerStorageGb,
-			"mysql_flexible_server_db_charset": expectedFlexibleServerDatabaseCharSet,
+			"mysql_flexible_server_sku_name":        "B_" + expectedFlexibleServerSkuName,
+			"mysql_flexible_server_storage_size_gb": expectedFlexibleServerStorageGb,
+			"mysql_flexible_server_db_charset":      expectedFlexibleServerDatabaseCharSet,
 		},
 	}
 
@@ -52,7 +52,7 @@ func TestTerraformAzureMySqlFlexibleServerDBExample(t *testing.T) {
 	expectedResourceGroupName := terraform.Output(t, terraformOptions, "resource_group_name")
 	expectedMySqlFlexibleServerName := terraform.Output(t, terraformOptions, "mysql_flexible_server_name")
 
-	expectedMySqlFlexibleServerDBName := terraform.Output(t, terraformOptions, "mysql_flexible_server_database_name")
+	expectedMySqlFlexibleServerDBName := terraform.Output(t, terraformOptions, "mysql_flexible_server_db_name")
 
 	// website::tag::4:: Get mySql server details and assert them against the terraform output
 	actualMySqlFlexibleServer := azure.GetMySqlFlexibleServer(t, expectedResourceGroupName, expectedMySqlFlexibleServerName, "")
