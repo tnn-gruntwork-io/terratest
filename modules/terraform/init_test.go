@@ -1,11 +1,16 @@
 package terraform
 
 import (
+	"bytes"
+	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/files"
+	"github.com/gruntwork-io/terratest/modules/logger"
+	ttest "github.com/gruntwork-io/terratest/modules/testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -131,4 +136,144 @@ func TestInitBackendMigration(t *testing.T) {
 	options.MigrateState = true
 	_, err = InitE(t, options)
 	assert.NoError(t, err, "Backend initialization with changed configuration should success with -migrate-state option")
+}
+
+type testLog struct {
+	w io.Writer
+}
+
+func (l testLog) Logf(t ttest.TestingT, format string, args ...interface{}) {
+	fmt.Fprintf(l.w, format, args...)
+}
+
+func TestInitAdditionalFlags(t *testing.T) {
+	t.Parallel()
+
+	ttests := map[string]struct {
+		// returns logged out buffer, opts, expect string, cleanup
+		setup func(t *testing.T) (*bytes.Buffer, *Options, string, func())
+	}{
+		"backend set to false": {
+			func(t *testing.T) (*bytes.Buffer, *Options, string, func()) {
+				b := &bytes.Buffer{}
+				l := testLog{b}
+				stateDirectory := t.TempDir()
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				require.NoError(t, err)
+				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
+
+				return b,
+					&Options{
+						Logger:       logger.New(l),
+						TerraformDir: testFolder,
+						Reconfigure:  true,
+						BackendConfig: map[string]any{
+							"path": backendPath,
+						},
+						AdditionalInitFlags: []string{"-backend=false"},
+					},
+					fmt.Sprintf("[init -upgrade=false -reconfigure -backend-config=path=%s -backend=false]", backendPath),
+					func() {
+						os.RemoveAll(testFolder)
+					}
+			},
+		},
+		"backend set to true": {
+			func(t *testing.T) (*bytes.Buffer, *Options, string, func()) {
+				b := &bytes.Buffer{}
+				l := testLog{b}
+				stateDirectory := t.TempDir()
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				require.NoError(t, err)
+				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
+
+				return b, &Options{
+						Logger:       logger.New(l),
+						TerraformDir: testFolder,
+						Reconfigure:  true,
+						BackendConfig: map[string]any{
+							"path": backendPath,
+						},
+						AdditionalInitFlags: []string{"-backend=true"},
+					},
+					fmt.Sprintf("[init -upgrade=false -reconfigure -backend-config=path=%s -backend=true]", backendPath),
+					func() {
+						os.RemoveAll(testFolder)
+					}
+			},
+		},
+		"backend not set via additional args": {
+			func(t *testing.T) (*bytes.Buffer, *Options, string, func()) {
+				b := &bytes.Buffer{}
+				l := testLog{b}
+				stateDirectory := t.TempDir()
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				require.NoError(t, err)
+				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
+
+				return b, &Options{
+						Logger:       logger.New(l),
+						TerraformDir: testFolder,
+						Reconfigure:  true,
+						BackendConfig: map[string]any{
+							"path": backendPath,
+						},
+						AdditionalInitFlags: []string{},
+					},
+					fmt.Sprintf("[init -upgrade=false -reconfigure -backend-config=path=%s]", backendPath),
+					func() {
+						os.RemoveAll(testFolder)
+					}
+			},
+		},
+		// should ignore the
+		"backend set to false and protected flags re-specified": {
+			setup: func(t *testing.T) (*bytes.Buffer, *Options, string, func()) {
+				b := &bytes.Buffer{}
+				l := testLog{b}
+				stateDirectory := t.TempDir()
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				require.NoError(t, err)
+				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
+				return b,
+					&Options{
+						Logger:       logger.New(l),
+						TerraformDir: testFolder,
+						Reconfigure:  false,
+						MigrateState: false,
+						BackendConfig: map[string]any{
+							"path": backendPath,
+						},
+						AdditionalInitFlags: []string{"-backend=false", "-reconfigure", "-migrate-state"},
+					},
+					fmt.Sprintf("[init -upgrade=false -backend-config=path=%s -backend=false]", backendPath),
+					func() {
+						os.RemoveAll(testFolder)
+					}
+			},
+		},
+	}
+	for name, tt := range ttests {
+		t.Run(name, func(t *testing.T) {
+
+			b, options, expect, cleanUp := tt.setup(t)
+			defer cleanUp()
+			_, _ = InitE(t, options)
+			assert.Contains(t, b.String(), expect)
+
+			if expect == "-backend=true" {
+				if statePath, ok := options.BackendConfig["path"]; ok {
+					ls, _ := os.ReadDir(fmt.Sprintf("%s", statePath))
+					for idx, v := range ls {
+						if v.Name() == "backend.tfstate" {
+							return
+						}
+						if idx == len(ls) {
+							t.Errorf("failed to find backend state file when it should have been created under: %s", statePath)
+						}
+					}
+				}
+			}
+		})
+	}
 }
