@@ -258,22 +258,9 @@ func TestInitAdditionalFlags(t *testing.T) {
 
 			b, options, expect, cleanUp := tt.setup(t)
 			defer cleanUp()
-			_, _ = InitE(t, options)
+			_, err := InitE(t, options)
 			assert.Contains(t, b.String(), expect)
-
-			if expect == "-backend=true" {
-				if statePath, ok := options.BackendConfig["path"]; ok {
-					ls, _ := os.ReadDir(fmt.Sprintf("%s", statePath))
-					for idx, v := range ls {
-						if v.Name() == "backend.tfstate" {
-							return
-						}
-						if idx == len(ls) {
-							t.Errorf("failed to find backend state file when it should have been created under: %s", statePath)
-						}
-					}
-				}
-			}
+			assert.NoError(t, err)
 		})
 	}
 }
