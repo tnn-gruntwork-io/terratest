@@ -158,7 +158,7 @@ func TestInitAdditionalFlags(t *testing.T) {
 				b := &bytes.Buffer{}
 				l := testLog{b}
 				stateDirectory := t.TempDir()
-				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "be-set-to-false")
 				require.NoError(t, err)
 				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
 
@@ -183,7 +183,7 @@ func TestInitAdditionalFlags(t *testing.T) {
 				b := &bytes.Buffer{}
 				l := testLog{b}
 				stateDirectory := t.TempDir()
-				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "be-set-to-true")
 				require.NoError(t, err)
 				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
 
@@ -207,7 +207,7 @@ func TestInitAdditionalFlags(t *testing.T) {
 				b := &bytes.Buffer{}
 				l := testLog{b}
 				stateDirectory := t.TempDir()
-				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "not-set-via-args")
 				require.NoError(t, err)
 				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
 
@@ -232,7 +232,7 @@ func TestInitAdditionalFlags(t *testing.T) {
 				b := &bytes.Buffer{}
 				l := testLog{b}
 				stateDirectory := t.TempDir()
-				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "")
+				testFolder, err := files.CopyTerraformFolderToTemp("../../test/fixtures/terraform-backend", "be-no-specified")
 				require.NoError(t, err)
 				backendPath := filepath.Join(stateDirectory, "backend.tfstate")
 				return b,
