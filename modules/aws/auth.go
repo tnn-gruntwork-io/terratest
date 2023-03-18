@@ -16,6 +16,7 @@ import (
 
 const (
 	AuthAssumeRoleEnvVar = "TERRATEST_IAM_ROLE" // OS environment variable name through which Assume Role ARN may be passed for authentication
+	CustomEndpointEnvVar = "TERRATEST_CUSTOM_AWS_ENDPOINT" // Custom endpoint to use as aws service
 )
 
 // NewAuthenticatedSession creates an AWS session following to standard AWS authentication workflow.
@@ -31,6 +32,11 @@ func NewAuthenticatedSession(region string) (*session.Session, error) {
 // NewAuthenticatedSessionFromDefaultCredentials gets an AWS Session, checking that the user has credentials properly configured in their environment.
 func NewAuthenticatedSessionFromDefaultCredentials(region string) (*session.Session, error) {
 	awsConfig := aws.NewConfig().WithRegion(region)
+
+	if customEndpoint, ok := os.LookupEnv(CustomEndpointEnvVar); ok {
+		awsConfig.WithEndpoint(customEndpoint)
+	}
+	awsConfig.WithEndpoint(os.Getenv(CustomEndpointEnvVar))
 
 	sessionOptions := session.Options{
 		Config:            *awsConfig,
@@ -68,7 +74,13 @@ func NewAuthenticatedSessionFromRole(region string, roleARN string) (*session.Se
 // CreateAwsSessionFromRole returns a new AWS session after assuming the role
 // whose ARN is provided in roleARN.
 func CreateAwsSessionFromRole(region string, roleARN string) (*session.Session, error) {
-	sess, err := session.NewSession(aws.NewConfig().WithRegion(region))
+	awsConfig := aws.NewConfig().WithRegion(region)
+
+	if customEndpoint, ok := os.LookupEnv(CustomEndpointEnvVar); ok {
+		awsConfig.WithEndpoint(customEndpoint)
+	}
+
+	sess, err := session.NewSession(awsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -86,8 +98,15 @@ func AssumeRole(sess *session.Session, roleARN string) *session.Session {
 // CreateAwsSessionWithCreds creates a new AWS session using explicit credentials. This is useful if you want to create an IAM User dynamically and
 // create an AWS session authenticated as the new IAM User.
 func CreateAwsSessionWithCreds(region string, accessKeyID string, secretAccessKey string) (*session.Session, error) {
-	creds := CreateAwsCredentials(accessKeyID, secretAccessKey)
-	return session.NewSession(aws.NewConfig().WithRegion(region).WithCredentials(creds))
+	awsConfig := aws.NewConfig().WithRegion(region)
+
+	if customEndpoint, ok := os.LookupEnv(CustomEndpointEnvVar); ok {
+		awsConfig.WithEndpoint(customEndpoint)
+	}
+
+	awsConfig.WithCredentials(CreateAwsCredentials(accessKeyID, secretAccessKey))
+
+	return session.NewSession(awsConfig)
 }
 
 // CreateAwsSessionWithMfa creates a new AWS session authenticated using an MFA token retrieved using the given STS client and MFA Device.
@@ -109,8 +128,15 @@ func CreateAwsSessionWithMfa(region string, stsClient *sts.STS, mfaDevice *iam.V
 	secretAccessKey := *output.Credentials.SecretAccessKey
 	sessionToken := *output.Credentials.SessionToken
 
-	creds := CreateAwsCredentialsWithSessionToken(accessKeyID, secretAccessKey, sessionToken)
-	return session.NewSession(aws.NewConfig().WithRegion(region).WithCredentials(creds))
+	awsConfig := aws.NewConfig().WithRegion(region)
+
+	if customEndpoint, ok := os.LookupEnv(CustomEndpointEnvVar); ok {
+		awsConfig.WithEndpoint(customEndpoint)
+	}
+
+	awsConfig.WithCredentials(CreateAwsCredentialsWithSessionToken(accessKeyID, secretAccessKey, sessionToken))
+
+	return session.NewSession(awsConfig)
 }
 
 // CreateAwsCredentials creates an AWS Credentials configuration with specific AWS credentials.
