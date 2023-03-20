@@ -73,7 +73,7 @@ func setupFailingDeploymentTest(t *testing.T, file string) error {
 	return err
 }
 
-func TestUnknownImage(t *testing.T) {
+func TestKubernetesUnknownImage(t *testing.T) {
 	err := setupFailingDeploymentTest(t, "unknown-image-deployment.yml")
 	notAvailableError := k8s.PodNotAvailable{}
 	require.ErrorAs(t, err, &notAvailableError)
@@ -83,7 +83,7 @@ func TestUnknownImage(t *testing.T) {
 	require.Contains(t, msg, "failed to pull and unpack image \"docker.io/not-an-place/not-an-app:latest\"")
 }
 
-func TestTooMuchResource(t *testing.T) {
+func TestKubernetesTooMuchResource(t *testing.T) {
 	err := setupFailingDeploymentTest(t, "too-much-resource-deployment.yml")
 	notAvailableError := k8s.PodNotAvailable{}
 	require.ErrorAs(t, err, &notAvailableError)
@@ -91,7 +91,7 @@ func TestTooMuchResource(t *testing.T) {
 	require.Contains(t, msg, "PodScheduled:Unschedulable")
 }
 
-func TestFailsAfterASec(t *testing.T) {
+func TestKubernetesFailsAfterASec(t *testing.T) {
 	err := setupFailingDeploymentTest(t, "probe-slow-to-pass-deployment.yml")
 	notAvailableError := k8s.PodNotAvailable{}
 	require.ErrorAs(t, err, &notAvailableError)
@@ -99,7 +99,7 @@ func TestFailsAfterASec(t *testing.T) {
 	require.Contains(t, msg, "Ready:ContainersNotReady")
 }
 
-func TestHappyThenFails(t *testing.T) {
+func TestKubernetesHappyThenFails(t *testing.T) {
 	err := setupFailingDeploymentTest(t, "happy-then-fail-deployment.yml")
 	notAvailableError := k8s.PodNotAvailable{}
 	require.ErrorAs(t, err, &notAvailableError)
@@ -108,7 +108,7 @@ func TestHappyThenFails(t *testing.T) {
 	require.Contains(t, msg, "ContainersReady:ContainersNotReady->containers with unready status: [app]")
 }
 
-func TestStopsAfter5s(t *testing.T) {
+func TestKubernetesStopsAfter5s(t *testing.T) {
 	err := setupFailingDeploymentTest(t, "container-stops-after-2s-deployment.yml")
 	notAvailableError := k8s.PodNotAvailable{}
 	require.ErrorAs(t, err, &notAvailableError)
