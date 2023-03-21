@@ -1,7 +1,6 @@
 package test
 
 import (
-	"os"
 	"fmt"
 	"strings"
 	"testing"
@@ -14,13 +13,11 @@ import (
 
 // An example of how to test the Terraform module in examples/terraform-aws-endpoint-example using Terratest.
 func TestTerraformAwsEndpointExample(t *testing.T) {
-	t.Parallel()
-
 	// Set a custom endpoint for AWS, and set the keys to dummy keys to
 	// pass that check
-	os.Setenv("TERRATEST_CUSTOM_AWS_ENDPOINT", "http://localhost:5000")
-	os.Setenv("AWS_ACCESS_KEY_ID", "dummy")
-	os.Setenv("AWS_SECRET_ACCESS_KEY", "dummy")
+	t.Setenv("TERRATEST_CUSTOM_AWS_ENDPOINT", "http://localhost:5000")
+	t.Setenv("AWS_ACCESS_KEY_ID", "dummy")
+	t.Setenv("AWS_SECRET_ACCESS_KEY", "dummy")
 
 	// Give this S3 Bucket a unique ID for a name tag so we can distinguish it from any other Buckets provisioned
 	// in your AWS account
