@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	AuthAssumeRoleEnvVar = "TERRATEST_IAM_ROLE" // OS environment variable name through which Assume Role ARN may be passed for authentication
+	AuthAssumeRoleEnvVar = "TERRATEST_IAM_ROLE"            // OS environment variable name through which Assume Role ARN may be passed for authentication
 	CustomEndpointEnvVar = "TERRATEST_CUSTOM_AWS_ENDPOINT" // Custom endpoint to use as aws service
 )
 

@@ -3,13 +3,13 @@
 # The examples have been upgraded to 0.12 syntax
 # ---------------------------------------------------------------------------------------------------------------------
 provider "aws" {
-  region = var.region
+  region     = var.region
   access_key = "dummy"
   secret_key = "dummy"
 
   endpoints {
-    sts      = "http://localhost:5000"
-    s3       = "http://localhost:5000"
+    sts = "http://localhost:5000"
+    s3  = "http://localhost:5000"
   }
 }
 
