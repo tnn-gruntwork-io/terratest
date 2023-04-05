@@ -169,6 +169,18 @@ func TestGetTagsForSubnet(t *testing.T) {
 	assert.True(t, testTags["TagKey2"] == "TagValue2")
 }
 
+func TestGetDefaultAzSubnets(t *testing.T) {
+	t.Parallel()
+
+	region := GetRandomStableRegion(t, nil, nil)
+	vpc := GetDefaultVpc(t, region)
+
+	// Note: cannot know exact list of default azs aheard of time, but we know that
+	//it must be greater than 0 for default vpc.
+	subnets := GetAzDefaultSubnetsForVpc(t, vpc.Id, region)
+	assert.NotZero(t, len(subnets))
+}
+
 func createPublicRoute(t *testing.T, vpcId string, routeTableId string, region string) {
 	ec2Client := NewEc2Client(t, region)
 

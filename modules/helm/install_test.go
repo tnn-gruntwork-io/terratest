@@ -26,7 +26,7 @@ import (
 const (
 	remoteChartSource  = "https://charts.bitnami.com/bitnami"
 	remoteChartName    = "nginx"
-	remoteChartVersion = "9.7.4"
+	remoteChartVersion = "13.2.23"
 )
 
 // Test that we can install a remote chart (e.g bitnami/nginx)
