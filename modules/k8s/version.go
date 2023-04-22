@@ -1,6 +1,6 @@
 package k8s
 
-import "github.com/gruntwork-io/terratest/modules/testing"
+import "github.com/tnn-gruntwork-io/terratest/modules/testing"
 
 // GetKubernetesClusterVersion returns the Kubernetes cluster version.
 func GetKubernetesClusterVersionE(t testing.TestingT) (string, error) {

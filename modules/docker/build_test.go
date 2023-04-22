@@ -5,16 +5,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/git"
-	"github.com/gruntwork-io/terratest/modules/logger"
-	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/tnn-gruntwork-io/terratest/modules/git"
+	"github.com/tnn-gruntwork-io/terratest/modules/logger"
+	"github.com/tnn-gruntwork-io/terratest/modules/random"
 	"github.com/stretchr/testify/require"
 )
 
 func TestBuild(t *testing.T) {
 	t.Parallel()
 
-	tag := "gruntwork-io/test-image:v1"
+	tag := "tnn-gruntwork-io/test-image:v1"
 	text := "Hello, World!"
 
 	options := &BuildOptions{
@@ -31,7 +31,7 @@ func TestBuild(t *testing.T) {
 func TestBuildWithBuildKit(t *testing.T) {
 	t.Parallel()
 
-	tag := "gruntwork-io/test-image-with-buildkit:v1"
+	tag := "tnn-gruntwork-io/test-image-with-buildkit:v1"
 	testToken := "testToken"
 	options := &BuildOptions{
 		Tags:           []string{tag},
@@ -48,7 +48,7 @@ func TestBuildWithBuildKit(t *testing.T) {
 func TestBuildMultiArch(t *testing.T) {
 	t.Parallel()
 
-	tag := "gruntwork-io/test-image:v1"
+	tag := "tnn-gruntwork-io/test-image:v1"
 	text := "Hello, World!"
 
 	options := &BuildOptions{
@@ -66,7 +66,7 @@ func TestBuildMultiArch(t *testing.T) {
 func TestBuildWithTarget(t *testing.T) {
 	t.Parallel()
 
-	tag := "gruntwork-io/test-image:target1"
+	tag := "tnn-gruntwork-io/test-image:target1"
 	text := "Hello, World!"
 	text1 := "Hello, World! This is build target 1!"
 
@@ -86,7 +86,7 @@ func TestGitCloneAndBuild(t *testing.T) {
 	t.Parallel()
 
 	uniqueID := strings.ToLower(random.UniqueId())
-	imageTag := "gruntwork-io-foo-test:" + uniqueID
+	imageTag := "tnn-gruntwork-io-foo-test:" + uniqueID
 	text := "Hello, World!"
 
 	buildOpts := &BuildOptions{
@@ -98,7 +98,7 @@ func TestGitCloneAndBuild(t *testing.T) {
 		logger.Logf(t, "WARNING: git.GetCurrentBranchName returned an empty string; falling back to master")
 		gitBranchName = "master"
 	}
-	GitCloneAndBuild(t, "git@github.com:gruntwork-io/terratest.git", gitBranchName, "test/fixtures/docker", buildOpts)
+	GitCloneAndBuild(t, "git@github.com:tnn-gruntwork-io/terratest.git", gitBranchName, "test/fixtures/docker", buildOpts)
 
 	out := Run(t, imageTag, &RunOptions{Remove: true})
 	require.Contains(t, out, text)

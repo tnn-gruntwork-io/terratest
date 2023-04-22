@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gruntwork-io/terratest/modules/retry"
+	"github.com/tnn-gruntwork-io/terratest/modules/retry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -30,7 +30,7 @@ var testDNSDatabase = dnsDatabase{
 	},
 
 	DNSQuery{"CNAME", "terratest." + testDomain}: DNSAnswers{
-		{"CNAME", "gruntwork-io.github.io."},
+		{"CNAME", "tnn-gruntwork-io.github.io."},
 	},
 
 	DNSQuery{"CNAME", "cname1." + testDomain}: DNSAnswers{
@@ -80,7 +80,7 @@ func TestErrorDNSFindNameservers(t *testing.T) {
 func TestOkTerratestDNSLookupAuthoritative(t *testing.T) {
 	t.Parallel()
 	dnsQuery := DNSQuery{"CNAME", "terratest." + testDomain}
-	expected := DNSAnswers{{"CNAME", "gruntwork-io.github.io."}}
+	expected := DNSAnswers{{"CNAME", "tnn-gruntwork-io.github.io."}}
 	res, err := DNSLookupAuthoritativeE(t, dnsQuery, nil)
 	require.NoError(t, err)
 	require.ElementsMatch(t, res, expected)

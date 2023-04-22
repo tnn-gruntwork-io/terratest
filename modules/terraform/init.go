@@ -3,7 +3,7 @@ package terraform
 import (
 	"fmt"
 
-	"github.com/gruntwork-io/terratest/modules/testing"
+	"github.com/tnn-gruntwork-io/terratest/modules/testing"
 )
 
 // Init calls terraform init and return stdout/stderr.

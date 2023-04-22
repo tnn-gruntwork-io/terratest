@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/gruntwork-io/go-commons/errors"
-	"github.com/gruntwork-io/go-commons/files"
+	"github.com/tnn-gruntwork-io/go-commons/errors"
+	"github.com/tnn-gruntwork-io/go-commons/files"
 	junitformatter "github.com/jstemmer/go-junit-report/formatter"
 	junitparser "github.com/jstemmer/go-junit-report/parser"
 	"github.com/sirupsen/logrus"

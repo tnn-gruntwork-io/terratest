@@ -11,13 +11,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gruntwork-io/terratest/modules/retry"
+	"github.com/tnn-gruntwork-io/terratest/modules/retry"
 	"github.com/hashicorp/go-multierror"
 	"github.com/stretchr/testify/require"
 
-	"github.com/gruntwork-io/terratest/modules/logger"
-	"github.com/gruntwork-io/terratest/modules/shell"
-	"github.com/gruntwork-io/terratest/modules/testing"
+	"github.com/tnn-gruntwork-io/terratest/modules/logger"
+	"github.com/tnn-gruntwork-io/terratest/modules/shell"
+	"github.com/tnn-gruntwork-io/terratest/modules/testing"
 	"github.com/hashicorp/go-version"
 )
 

@@ -12,11 +12,11 @@ nav_title_link: /docs/
 
 ## Github Discussions
 
-Search our [Knowledge Base](https://github.com/gruntwork-io/knowledge-base/discussions) to find existing questions or ask your own. Github Discussions is a good place for general discussions and questions.
+Search our [Knowledge Base](https://github.com/tnn-gruntwork-io/knowledge-base/discussions) to find existing questions or ask your own. Github Discussions is a good place for general discussions and questions.
 
 ## Github Issues
 
-Read through [existing issues](https://github.com/gruntwork-io/terratest/issues) or post a new one. Github issues is a good place to:
+Read through [existing issues](https://github.com/tnn-gruntwork-io/terratest/issues) or post a new one. Github issues is a good place to:
 
 - report a bug,
 

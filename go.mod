@@ -1,4 +1,4 @@
-module github.com/gruntwork-io/terratest
+module github.com/tnn-gruntwork-io/terratest
 
 go 1.18
 
@@ -19,7 +19,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/google/go-containerregistry v0.6.0
 	github.com/google/uuid v1.3.0
-	github.com/gruntwork-io/go-commons v0.8.0
+	github.com/tnn-gruntwork-io/go-commons v0.8.0
 	github.com/hashicorp/go-getter v1.7.1
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/hashicorp/go-version v1.6.0

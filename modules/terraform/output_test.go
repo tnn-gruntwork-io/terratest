@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/files"
+	"github.com/tnn-gruntwork-io/terratest/modules/files"
 	"github.com/stretchr/testify/require"
 )
 

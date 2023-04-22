@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	tftesting "github.com/gruntwork-io/terratest/modules/testing"
+	tftesting "github.com/tnn-gruntwork-io/terratest/modules/testing"
 	"github.com/stretchr/testify/assert"
 )
 

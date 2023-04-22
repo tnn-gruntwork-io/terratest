@@ -251,7 +251,7 @@ func TestIsSummaryLine(t *testing.T) {
 	}{
 		{
 			"BaseCase",
-			"ok  	github.com/gruntwork-io/terratest/test	812.034s",
+			"ok  	github.com/tnn-gruntwork-io/terratest/test	812.034s",
 			true,
 		},
 		{

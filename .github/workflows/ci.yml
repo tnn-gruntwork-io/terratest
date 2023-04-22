@@ -1,9 +1,9 @@
 name: ci-workflow
 
 # actors
-  # source repo: official terratest repo (gruntwork-io/terratest)
+  # source repo: official terratest repo (tnn-gruntwork-io/terratest)
   # forked repo: (e.g., xyz/terratest, abc/terratest)
-  # pr: created from forked repo, against source repo (gruntwork-io/terratest/pull/{PR NUMBER})
+  # pr: created from forked repo, against source repo (tnn-gruntwork-io/terratest/pull/{PR NUMBER})
 # flow
   # developer fork the source repo
   # developer creates a branch in the forked repo
@@ -13,7 +13,7 @@ name: ci-workflow
   # this pipeline will be triggered automatically by the webapp, with the following input values
     # repo: name of the forked repo (e.g. xyz/terratest)
     # branch: branch name on the forked repo (e.g. feature/adding-some-important-module)
-    # target_repository: home of the target_pr, which is the source repo (gruntwork-io/terratest)
+    # target_repository: home of the target_pr, which is the source repo (tnn-gruntwork-io/terratest)
     # target_pr: pr number on the source repo (e.g. 14, 25, etc.)
 
 on:
@@ -30,7 +30,7 @@ on:
       target_repository:
         description: 'Name of the official terratest repo'
         required: false
-        default: 'gruntwork-io/terratest'
+        default: 'tnn-gruntwork-io/terratest'
       target_pr:
         description: 'PR number on the official terratest repo'
         required: false
