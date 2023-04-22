@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gruntwork-io/terratest/modules/retry"
+	"github.com/tnn-gruntwork-io/terratest/modules/retry"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/api/compute/v1"
 )

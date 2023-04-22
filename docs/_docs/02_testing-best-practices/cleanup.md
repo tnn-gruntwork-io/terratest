@@ -30,5 +30,5 @@ checkServerWorks(t, options)
 
 Of course, despite your best efforts, occasionally cleanup will fail, perhaps due to the CI server going down, or a bug
 in your code, or a temporary network outage. To handle those cases, we run a tool called
-[cloud-nuke](https://github.com/gruntwork-io/cloud-nuke) in our test AWS account on a nightly basis to clean up any
+[cloud-nuke](https://github.com/tnn-gruntwork-io/cloud-nuke) in our test AWS account on a nightly basis to clean up any
 leftover resources.

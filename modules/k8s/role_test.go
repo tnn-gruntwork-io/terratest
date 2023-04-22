@@ -16,7 +16,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/tnn-gruntwork-io/terratest/modules/random"
 )
 
 func TestGetRoleEReturnsErrorForNonExistantRole(t *testing.T) {

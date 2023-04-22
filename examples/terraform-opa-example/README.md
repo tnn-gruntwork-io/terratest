@@ -1,7 +1,7 @@
 # Terraform OPA Example
 
 This folder contains an [OPA](https://www.openpolicyagent.org/) policy that validates that all module blocks use a
-source that comes from the `gruntwork-io` GitHub org (the [enforce_source.rego](./policy/enforce_source.rego) file).
+source that comes from the `tnn-gruntwork-io` GitHub org (the [enforce_source.rego](./policy/enforce_source.rego) file).
 To test this policy, we provided two Terraform modules, [pass](./pass) and [fail](./fail), which will demonstrate how
 OPA looks when run against a module that passes the checks, and one that fails the checks.
 

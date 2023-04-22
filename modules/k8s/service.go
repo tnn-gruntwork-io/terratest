@@ -11,11 +11,11 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/gruntwork-io/terratest/modules/aws"
-	"github.com/gruntwork-io/terratest/modules/logger"
-	"github.com/gruntwork-io/terratest/modules/random"
-	"github.com/gruntwork-io/terratest/modules/retry"
-	"github.com/gruntwork-io/terratest/modules/testing"
+	"github.com/tnn-gruntwork-io/terratest/modules/aws"
+	"github.com/tnn-gruntwork-io/terratest/modules/logger"
+	"github.com/tnn-gruntwork-io/terratest/modules/random"
+	"github.com/tnn-gruntwork-io/terratest/modules/retry"
+	"github.com/tnn-gruntwork-io/terratest/modules/testing"
 )
 
 // ListServices will look for services in the given namespace that match the given filters and return them. This will

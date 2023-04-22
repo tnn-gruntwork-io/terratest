@@ -1,8 +1,8 @@
 package helm
 
 import (
-	"github.com/gruntwork-io/terratest/modules/k8s"
-	"github.com/gruntwork-io/terratest/modules/logger"
+	"github.com/tnn-gruntwork-io/terratest/modules/k8s"
+	"github.com/tnn-gruntwork-io/terratest/modules/logger"
 )
 
 type Options struct {

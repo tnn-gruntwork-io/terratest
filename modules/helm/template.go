@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/ghodss/yaml"
-	"github.com/gruntwork-io/go-commons/errors"
+	"github.com/tnn-gruntwork-io/go-commons/errors"
 	"github.com/stretchr/testify/require"
 
-	"github.com/gruntwork-io/terratest/modules/files"
-	"github.com/gruntwork-io/terratest/modules/testing"
+	"github.com/tnn-gruntwork-io/terratest/modules/files"
+	"github.com/tnn-gruntwork-io/terratest/modules/testing"
 )
 
 // RenderTemplate runs `helm template` to render the template given the provided options and returns stdout/stderr from

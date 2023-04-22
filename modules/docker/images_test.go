@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/tnn-gruntwork-io/terratest/modules/random"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +13,7 @@ func TestListImagesAndDeleteImage(t *testing.T) {
 	t.Parallel()
 
 	uniqueID := strings.ToLower(random.UniqueId())
-	repo := "gruntwork-io/test-image"
+	repo := "tnn-gruntwork-io/test-image"
 	tag := fmt.Sprintf("v1-%s", uniqueID)
 	img := fmt.Sprintf("%s:%s", repo, tag)
 

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/tnn-gruntwork-io/terratest/modules/random"
 	"github.com/stretchr/testify/require"
 )
 

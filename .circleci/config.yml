@@ -39,10 +39,10 @@ install_helm: &install_helm
 install_gruntwork_utils: &install_gruntwork_utils
   name: install gruntwork utils
   command: |
-    curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "${GRUNTWORK_INSTALLER_VERSION}"
-    gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "${MODULE_CI_VERSION}"
-    gruntwork-install --module-name "kubernetes-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "${MODULE_CI_VERSION}"
-    gruntwork-install --module-name "gcp-helpers" --repo "https://github.com/gruntwork-io/terraform-google-ci" --tag "${MODULE_GCP_CI_VERSION}"
+    curl -Ls https://raw.githubusercontent.com/tnn-gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "${GRUNTWORK_INSTALLER_VERSION}"
+    gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/tnn-gruntwork-io/terraform-aws-ci" --tag "${MODULE_CI_VERSION}"
+    gruntwork-install --module-name "kubernetes-circleci-helpers" --repo "https://github.com/tnn-gruntwork-io/terraform-aws-ci" --tag "${MODULE_CI_VERSION}"
+    gruntwork-install --module-name "gcp-helpers" --repo "https://github.com/tnn-gruntwork-io/terraform-google-ci" --tag "${MODULE_GCP_CI_VERSION}"
     configure-environment-for-gruntwork-module \
       --terraform-version ${TERRAFORM_VERSION} \
       --terragrunt-version ${TERRAGRUNT_VERSION} \
@@ -197,7 +197,7 @@ jobs:
 
   # We run the GCP tests in a separate build step using the Docker executor for better isolation and resiliency. Using
   # The Docker executor ensures GCP tests do not erroneously make metadata network calls within CircleCI's private
-  # environment. For more information see: https://github.com/gruntwork-io/terratest/pull/765.
+  # environment. For more information see: https://github.com/tnn-gruntwork-io/terratest/pull/765.
   gcp_test:
     <<: *env
     docker:
@@ -324,9 +324,9 @@ jobs:
       - attach_workspace:
           at: /home/circleci
       - run: |
-          curl -Ls https://raw.githubusercontent.com/gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "$GRUNTWORK_INSTALLER_VERSION"
+          curl -Ls https://raw.githubusercontent.com/tnn-gruntwork-io/gruntwork-installer/master/bootstrap-gruntwork-installer.sh | bash /dev/stdin --version "$GRUNTWORK_INSTALLER_VERSION"
       - run: |
-          gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/gruntwork-io/terraform-aws-ci" --tag "$MODULE_CI_VERSION"
+          gruntwork-install --module-name "gruntwork-module-circleci-helpers" --repo "https://github.com/tnn-gruntwork-io/terraform-aws-ci" --tag "$MODULE_CI_VERSION"
       - run: cd cmd/bin && sha256sum * > SHA256SUMS
       - run: upload-github-release-assets cmd/bin/*
 
